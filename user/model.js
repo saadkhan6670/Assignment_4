@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-import validate from 'mongoose-validator';
+const validate = require('mongoose-validator');
 
 const emailValidate =[
     validate({
@@ -27,4 +27,4 @@ const UserSchema = new Schema ({
 
 });
 
-export default mongoose.model('Users', UserSchema);
+module.exports= mongoose.model('Users', UserSchema);

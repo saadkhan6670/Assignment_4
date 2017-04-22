@@ -1,17 +1,13 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
-import Promise from 'mpromise';
-import boom from 'boom';
-import passport from 'passport';
-import {Strategy as LocalStrategy} from 'passport-local';
-import {Strategy as bearerStrategy} from 'passport-http-bearer';
-import jwt from 'jsonwebtoken';
+const Promise = require( 'mpromise');
+const jwt = require('jsonwebtoken');
 
 let myToken;
 
 mongoose.Promise = global.Promise;
 
-export function createUser(req, res, next) {
+exports.createUser = function(req, res, next) {
 
     const NewUser = new Users(req.body);
 
@@ -24,9 +20,9 @@ export function createUser(req, res, next) {
             err.status = 403;
             next(err);
         }
-    })}
+    })};
 
-export function ShowUsers(req, res) {
+exports.ShowUsers = function(req, res) {
     const decode = jwt.verify(myToken,'secret' ,(err, decoded, next) => {
 
         Users.find({},(err, user) => {
@@ -35,9 +31,9 @@ export function ShowUsers(req, res) {
 
         })
 
-    });}
+    });};
 
-export function logInUser(req, res, next) {
+exports.logInUser= function(req, res, next) {
 
     const email = req.body.email;
     const password = req.body.password;
@@ -71,26 +67,9 @@ export function logInUser(req, res, next) {
             next(err2);
         }});
 
+};
 
-    // Users.findOne({email: email,password :password},function (err,user) {
-    //     if(err ){
-    //         console.log(err);
-    //         res.sendStatus(500);}
-    //     if(!user ){
-    //          res.send("No such user");}
-    //
-    //          else {
-    //          myToken = jwt.sign({
-    //             id: user._id,
-    //             email: email},'secret',{ expiresIn: '60000' });
-    //
-    //          res.send(user._id+" Welcome User having TOKEN :  " + myToken);}
-    //
-    // })
-
-}
-
-export function userProfile(req, res) {
+exports.userProfile = function(req, res) {
     const decode = jwt.verify(myToken,'secret' ,(err, decoded) => {
 
         Users.findOne({email : decoded.email},(err, user) => {
@@ -103,7 +82,7 @@ export function userProfile(req, res) {
     });}
 
 //remove users from the db
-export function Remove(req, res) {
+exports.Remove = function(req, res) {
     const id = req.query.access_token.toString();
 
     Users.remove({id},(err, user) => {
@@ -112,4 +91,4 @@ export function Remove(req, res) {
         res.send("Users  deleted");
 
     })
-}
+};

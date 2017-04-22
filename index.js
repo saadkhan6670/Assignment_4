@@ -1,10 +1,9 @@
 const express = require('express');
-import bodyParser from 'body-parser';
-import flash from 'connect-flash';
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
-import mongoose from 'mongoose';
-import Users from './user/Model';
+const mongoose = require('mongoose');
+const Users =require( './user/Model');
 
 
 //Connect to mongodb

@@ -1,10 +1,8 @@
-import express from 'express';
+const express = require( 'express');
 const app = express();
 const router = express.Router();
-import user from './controller';
-import passport from 'passport';
-import {Strategy as LocalStrategy} from 'passport-local';
-import expressJWT from 'express-jwt';
+const user = require('./controller');
+const expressJWT = require('express-jwt');
 
 router.use(expressJWT({secret:'secret'}).unless({path: [
     '/user/login-user',
@@ -21,5 +19,5 @@ router.get('/show-users' , user.ShowUsers);
 router.get('/user-profile', user.userProfile);
 
 
-export default router;
+module.exports = router;
 
