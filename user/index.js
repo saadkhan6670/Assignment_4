@@ -9,7 +9,7 @@ router.use(expressJWT({secret:'secret'}).unless({path: [
     '/user/create-user' ]}));
 
 
-router.post('/create-user' , user.createUser);
+router.post('/create-user', user.createUser);
 router.post('/login-user',user.logInUser);
 
 router.get('/remove-user', user.Remove);

@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
-const Promise = require( 'mpromise');
+const Promise = require("bluebird");
 const jwt = require('jsonwebtoken');
+const boom = require('boom');
 
 let myToken;
-
-mongoose.Promise = global.Promise;
 
 exports.createUser = function(req, res, next) {
 
@@ -16,9 +15,11 @@ exports.createUser = function(req, res, next) {
             res.json(user);
 
         else {
-            var err = new Error(err);
-            err.status = 403;
-            next(err);
+           next( boom.forbidden('forbidden'));
+
+            // var err = new Error(err);
+            // err.status = 403;
+            // next(err);
         }
     })};
 
@@ -26,9 +27,10 @@ exports.ShowUsers = function(req, res) {
     const decode = jwt.verify(myToken,'secret' ,(err, decoded, next) => {
 
         Users.find({},(err, user) => {
-            if(user)
-                res.send(user);
-
+            if(!user)
+                res.send(err);
+             else
+                 res.send(user);
         })
 
     });};
@@ -60,11 +62,12 @@ exports.logInUser= function(req, res, next) {
             });
         }
         else {
+            next(boom.badRequest('bad Request'));
 
-            const err2 = new Error('Unauthorized');
-
-            err2.status = 401;
-            next(err2);
+            // const err2 = new Error('Unauthorized');
+            //
+            // err2.status = 401;
+            // next(err2);
         }});
 
 };
@@ -79,7 +82,7 @@ exports.userProfile = function(req, res) {
 
         })
 
-    });}
+    });};
 
 //remove users from the db
 exports.Remove = function(req, res) {

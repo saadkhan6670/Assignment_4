@@ -28,7 +28,9 @@ app.listen(port, () => {
 });
 
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-res.send(`Error: ${err.message}`);
+   res.send(err);
+//     res.status(err.status || 500);
+// res.send(`Error: ${err.message}${err.status}`);
+// console.log(err);
 });
 
