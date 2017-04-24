@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
-const Promise = require("bluebird");
+const Promise = require('bluebird');
 const jwt = require('jsonwebtoken');
 const boom = require('boom');
+const  passport = require('passport');
 
 let myToken;
+
+
 
 exports.createUser = (req, res, next) => {
 
@@ -74,16 +77,27 @@ exports.logInUser= (req, res, next) => {
 };
 
 exports.userProfile = (req, res) => {
-    const decode = jwt.verify(myToken,'secret' ,(err, decoded) => {
+    console.log("i am from userprofile");
 
-        Users.findOne({email : decoded.email},(err, user) => {
+
             if(!user)
                 res.send("No User Found");
             res.send(user);
 
-        })
+};
 
-    });};
+
+
+    // const decode = jwt.verify(myToken,'secret' ,(err, decoded) => {
+    //
+    //     Users.findOne({email : decoded.email},(err, user) => {
+    //         if(!user)
+    //             res.send("No User Found");
+    //         res.send(user);
+    //
+    //     })
+    //
+    // });};
 
 //remove users from the db
 exports.Remove = (req, res) => {
