@@ -6,7 +6,7 @@ const boom = require('boom');
 
 let myToken;
 
-exports.createUser = function(req, res, next) {
+exports.createUser = (req, res, next) => {
 
     const NewUser = new Users(req.body);
 
@@ -23,7 +23,7 @@ exports.createUser = function(req, res, next) {
         }
     })};
 
-exports.ShowUsers = function(req, res) {
+exports.ShowUsers = (req, res) => {
     const decode = jwt.verify(myToken,'secret' ,(err, decoded, next) => {
 
         Users.find({},(err, user) => {
@@ -35,7 +35,7 @@ exports.ShowUsers = function(req, res) {
 
     });};
 
-exports.logInUser= function(req, res, next) {
+exports.logInUser= (req, res, next) => {
 
     const email = req.body.email;
     const password = req.body.password;
@@ -48,7 +48,7 @@ exports.logInUser= function(req, res, next) {
 
             // if user is found and password is right
             // create a token
-            myToken = jwt.sign({
+           myToken = jwt.sign({
                 id: user._id ,
                 email}, 'secret', {
                 expiresIn: 10 * 60000 // expires in 10 mins
@@ -60,6 +60,7 @@ exports.logInUser= function(req, res, next) {
                 message: 'Enjoy your token!',
                 token: myToken
             });
+            exports.myToken =myToken;
         }
         else {
             next(boom.badRequest('bad Request'));
@@ -72,7 +73,7 @@ exports.logInUser= function(req, res, next) {
 
 };
 
-exports.userProfile = function(req, res) {
+exports.userProfile = (req, res) => {
     const decode = jwt.verify(myToken,'secret' ,(err, decoded) => {
 
         Users.findOne({email : decoded.email},(err, user) => {
@@ -85,7 +86,7 @@ exports.userProfile = function(req, res) {
     });};
 
 //remove users from the db
-exports.Remove = function(req, res) {
+exports.Remove = (req, res) => {
     const id = req.query.access_token.toString();
 
     Users.remove({id},(err, user) => {
@@ -95,3 +96,6 @@ exports.Remove = function(req, res) {
 
     })
 };
+
+
+
