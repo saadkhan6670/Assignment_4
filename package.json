@@ -23,6 +23,7 @@
     "memory-cache": "^0.1.6",
     "mongoose": "^4.9.6",
     "mongoose-validator": "^1.2.5",
+    "mpromise": "^0.5.5",
     "node-validator": "^0.1.26",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",

@@ -1,28 +1,29 @@
 const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
-const Promise = require('bluebird');
+// const Promise = require('bluebird');
+const Promise = require('mpromise');
 const jwt = require('jsonwebtoken');
 const boom = require('boom');
 const  passport = require('passport');
+const auth = require('../middleware/Authentication');
 
 let myToken;
 
-
-
+mongoose.Promise = global.Promise;
 exports.createUser = (req, res, next) => {
 
-    const NewUser = new Users(req.body);
+    let NewUser = new Users(req.body);
 
     NewUser.save ((err, user) => {
-        if (user)
+        if (!user){
+
+            next( boom.unauthorized(err.errors));
+
+        }
+        else {
+          // next( boom.unauthorized(err.message));
             res.json(user);
 
-        else {
-           next( boom.forbidden('forbidden'));
-
-            // var err = new Error(err);
-            // err.status = 403;
-            // next(err);
         }
     })};
 
@@ -66,12 +67,8 @@ exports.logInUser= (req, res, next) => {
             exports.myToken =myToken;
         }
         else {
-            next(boom.badRequest('bad Request'));
+            next(boom.forbidden('bad Request'));
 
-            // const err2 = new Error('Unauthorized');
-            //
-            // err2.status = 401;
-            // next(err2);
         }});
 
 };
@@ -79,10 +76,12 @@ exports.logInUser= (req, res, next) => {
 exports.userProfile = (req, res) => {
     console.log("i am from userprofile");
 
-
+    Users.findOne({email : auth.authenticate.decode.email},(err, user) => {
             if(!user)
                 res.send("No User Found");
             res.send(user);
+    });
+    console.log("i am from2 userprofile");
 
 };
 

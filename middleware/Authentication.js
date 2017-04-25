@@ -1,26 +1,20 @@
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const Users = mongoose.model('Users');
 const control = require('../user/controller');
+const boom = require('boom');
 
-exports.display = function(req, res, next) {
-    let paramToken = req.header('Authorization').split(".");
+exports.authenticate = function(req, res, next) {
+    let paramToken = req.header('Authorization');
+    let token = control.myToken;
 
-let token = control.myToken.split(".");
-
-if (paramToken[1] === token[1]){
-    console.log("valid token");
-    const decode = jwt.verify(myToken,'secret' ,(err, decoded) =>{
-        Users.findOne({email : decoded.email});
-
-            next();
-        })
+// is used to compare two arrays
+if (JSON.stringify(paramToken) !== JSON.stringify(token)){
+    next(boom.unauthorized('invalid Token'));
 }
-
-else
-    console.log("invalid token");
-res.end();
-
+else{
+    console.log("valid token");
+    const decode = jwt.verify(paramToken,'secret');
+    //next();
+    }
 
 
 };

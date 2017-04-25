@@ -2,22 +2,17 @@ const express = require( 'express');
 const app = express();
 const router = express.Router();
 const user = require('./controller');
-const test = require('../middleware/Authentication');
+const auth = require('../middleware/Authentication');
 const expressJWT = require('express-jwt');
 
-router.use(expressJWT({secret:'secret'}).unless({path: [
-    '/user/login-user',
-    '/user/create-user' ]}));
-
-
-router.post('/create-user',test.display, user.createUser);
+router.post('/create-user', user.createUser);
 router.post('/login-user',user.logInUser);
 
 router.get('/remove-user', user.Remove);
 router.get('/show-users' , user.ShowUsers);
 
 
-router.get('/user-profile',test.display, user.userProfile);
+router.get('/user-profile',auth.authenticate, user.userProfile);
 
 
 module.exports = router;
