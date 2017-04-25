@@ -27,7 +27,7 @@ app.listen(port, () => {
     console.log(`Running server on ${port}`);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
    res.sendStatus(err.output.payload.statusCode);
 });
 

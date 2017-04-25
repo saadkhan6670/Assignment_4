@@ -74,15 +74,13 @@ exports.logInUser= (req, res, next) => {
 };
 
 exports.userProfile = (req, res) => {
-    console.log("i am from userprofile");
 
-    Users.findOne({email : auth.authenticate.decode.email},(err, user) => {
-            if(!user)
-                res.send("No User Found");
-            res.send(user);
-    });
-    console.log("i am from2 userprofile");
+    Users.findOne({email : myToken.email},(err, user) => {
+                if(!user)
+                    res.send("No User Found");
+                res.send(user);
 
+            })
 };
 
 
