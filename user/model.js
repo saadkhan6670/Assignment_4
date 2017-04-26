@@ -21,8 +21,12 @@ const phoneValidate =[
 const UserSchema = new Schema ({
     firstname : String,
     lastname : String,
-    email : { type:String, validate:emailValidate, unique: true, lowercase:true, message:'Invalid email' },
-    phone : {type:Number, validate:phoneValidate, message:'Invalid Phone'},
+    email : { type:String, validate:emailValidate,
+        unique: true, lowercase:true,
+        required: [true, 'User email required']},
+    phone : {type:Number,
+        validate:phoneValidate,
+        required: [true, 'User phone number required']},
     password : String
 
 });

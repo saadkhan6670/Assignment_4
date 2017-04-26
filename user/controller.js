@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
 // const Promise = require('bluebird');
-const Promise = require('mpromise');
 const jwt = require('jsonwebtoken');
 const boom = require('boom');
-const  passport = require('passport');
-const auth = require('../middleware/Authentication');
 
 let myToken;
 
@@ -15,29 +12,26 @@ exports.createUser = (req, res, next) => {
     let NewUser = new Users(req.body);
 
     NewUser.save ((err, user) => {
-        if (!user){
-
-            next( boom.unauthorized(err.errors));
-
+        if (err) {
+           next(boom.unauthorized(err.toString()));
         }
+
         else {
-          // next( boom.unauthorized(err.message));
             res.json(user);
 
         }
     })};
 
-exports.ShowUsers = (req, res) => {
-    const decode = jwt.verify(myToken,'secret' ,(err, decoded, next) => {
+exports.ShowUsers = (req, res,next) => {
 
         Users.find({},(err, user) => {
             if(!user)
-                res.send(err);
-             else
+                next(boom.unauthorized('No User found'));
+            else
                  res.send(user);
         })
 
-    });};
+    };
 
 exports.logInUser= (req, res, next) => {
 
@@ -74,39 +68,21 @@ exports.logInUser= (req, res, next) => {
 };
 
 exports.userProfile = (req, res) => {
-
-    Users.findOne({email : myToken.email},(err, user) => {
-                if(!user)
-                    res.send("No User Found");
-                res.send(user);
-
-            })
+  res.send( req.user);
 };
-
-
-
-    // const decode = jwt.verify(myToken,'secret' ,(err, decoded) => {
-    //
-    //     Users.findOne({email : decoded.email},(err, user) => {
-    //         if(!user)
-    //             res.send("No User Found");
-    //         res.send(user);
-    //
-    //     })
-    //
-    // });};
 
 //remove users from the db
-exports.Remove = (req, res) => {
-    const id = req.query.access_token.toString();
+exports.Remove = (req, res,next) => {
 
-    Users.remove({id},(err, user) => {
+    Users.remove({email:req.body.email},(err, user) => {
+
         if (err)
-            console.log(err);
-        res.send("Users  deleted");
-
+            next(boom.forbidden('No User Found With this credentials'));
+        else {
+        res.send("Users  deleted");}
     })
 };
+
 
 
 

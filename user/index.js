@@ -8,8 +8,8 @@ const expressJWT = require('express-jwt');
 router.post('/create-user', user.createUser);
 router.post('/login-user',user.logInUser);
 
-router.get('/remove-user', user.Remove);
-router.get('/show-users' , user.ShowUsers);
+router.post('/remove-user',auth.authenticate, user.Remove);
+router.get('/show-users' ,auth.authenticate, user.ShowUsers);
 
 
 router.get('/user-profile',auth.authenticate, user.userProfile);
