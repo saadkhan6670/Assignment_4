@@ -11,6 +11,10 @@ router.post('/login-user',user.logInUser);
 router.post('/remove-user',auth.authenticate, user.Remove);
 router.get('/show-users' ,auth.authenticate, user.ShowUsers);
 
+router.put('/update-user/:email', user.UpdateUser);
+
+router.get('/list-user/:param', user.ListUsers);
+
 
 router.get('/user-profile',auth.authenticate, user.userProfile);
 

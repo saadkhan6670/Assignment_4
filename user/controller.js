@@ -83,6 +83,36 @@ exports.Remove = (req, res,next) => {
     })
 };
 
+exports.UpdateUser = (req, res) => {
+
+    let UpdateUser = req.body;
+
+    if(req.body.email){
+        res.send("you cant update email! ");
+    }
+
+    else{
+    Users.update({email: req.params.email} , UpdateUser, (err, raw) =>{
+    if(!raw){
+   res.send("xyz");
+}
+    else{res.send()}
+ })
+};
+};
+
+exports.ListUsers = (req, res) => {
+
+   var param = req.params;
+
+   Users.find({}, null).sort[para.email,1], function(err, user) {
+
+       res.send(err);	
+       console.log("in log");					 
+				  res.send(user);
+			  };
+
+};
 
 
 
