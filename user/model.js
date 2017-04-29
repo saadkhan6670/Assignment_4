@@ -22,7 +22,7 @@ const UserSchema = new Schema ({
     firstname : String,
     lastname : String,
     email : { type:String, validate:emailValidate,
-        unique: true, lowercase:true,
+        unique: true, lowercase:true,normalized: String,
         required: [true, 'User email required']},
     phone : {type:Number,
         validate:phoneValidate,

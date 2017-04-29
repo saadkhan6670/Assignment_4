@@ -96,21 +96,17 @@ exports.UpdateUser = (req, res) => {
     if(!raw){
    res.send("xyz");
 }
-    else{res.send()}
+    else{res.send(raw)}
  })
 };
 };
 
 exports.ListUsers = (req, res) => {
 
-   var param = req.params;
+        Users.find().sort({'email': 1}).exec(function(err, users) {
 
-   Users.find({}, null).sort[para.email,1], function(err, user) {
-
-       res.send(err);	
-       console.log("in log");					 
-				  res.send(user);
-			  };
+                res.send(users);
+});
 
 };
 
