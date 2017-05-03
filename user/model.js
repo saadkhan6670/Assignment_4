@@ -23,12 +23,18 @@ const UserSchema = new Schema ({
     lastname : String,
     email : { type:String, validate:emailValidate,
         unique: true, lowercase:true,normalized: String,
-        required: [true, 'User email required']},
+        required: [true, 'Users email required']},
     phone : {type:Number,
         validate:phoneValidate,
-        required: [true, 'User phone number required']},
-    password : String
-
+        required: [true, 'Users phone number required']},
+    password : String,
+    posts : [{ type: Schema.Types.ObjectId, ref: 'Posts' }]
 });
 
+const UserPost = new Schema({
+    post : String,
+    creator: [{ type: Schema.Types.ObjectId , ref:'Users' }]
+})                              
+
 module.exports = mongoose.model('Users', UserSchema);
+module.exports = mongoose.model('Posts', UserPost );

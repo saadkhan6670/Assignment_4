@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Users = mongoose.model('Users');
+const Posts = mongoose.model('Posts');
 // const Promise = require('bluebird');
 const jwt = require('jsonwebtoken');
 const boom = require('boom');
@@ -68,7 +69,14 @@ exports.logInUser= (req, res, next) => {
 };
 
 exports.userProfile = (req, res) => {
-  res.send( req.user);
+    var UserData = req.user;
+
+    Users.findOne({ _id : UserData._id }).populate('posts').exec(function (err, user) {
+  if (err) return handleError(err);
+
+  res.send(user);
+});
+
 };
 
 //remove users from the db
@@ -101,14 +109,54 @@ exports.UpdateUser = (req, res) => {
 };
 };
 
-exports.ListUsers = (req, res) => {
+exports.ListUsers = (req, res,next) => {
+    var input = req.params.param;
 
-        Users.find().sort({'email': 1}).exec(function(err, users) {
+        Users.find({}).sort(input).exec(function(err, doc) {
 
-                res.send(users);
-});
+            if(err){
+            next(boom.forbidden('bad Request'));
+            }
 
+                else {
+           res.send(doc);
+
+        }});
 };
+
+exports.CreatePost = (req, res) => {
+      let NewPost = new Posts({
+          post: req.body.post,
+          creator : req.user._id
+
+      });
+
+    NewPost.save ((err, doc) => {
+        if (err) {
+           next(boom.unauthorized(err.toString()));
+        }
+
+        else {
+            res.json(doc);
+
+        }
+    })};
+
+
+exports.DeletePost = (req, res) => {
+
+}
+
+exports.FollowUser = (req, res) => {
+
+}
+
+exports.UnfollowUser = (req, res) => {
+
+}
+
+
+
 
 
 
