@@ -17,7 +17,7 @@ router.get('/list-user/:param', user.ListUsers);
 router.get('/user-profile',auth.authenticate, user.userProfile);
 
 router.post('/user-posts',auth.authenticate,user.CreatePost);
-router.delete('/delete-post');
+router.delete('/delete-post/:postid',auth.authenticate,user.DeletePost);
 
 router.put('/followers/:userid');
 router.put('/unfollow/:userid');

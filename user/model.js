@@ -33,7 +33,7 @@ const UserSchema = new Schema ({
 
 const UserPost = new Schema({
     post : String,
-    creator: [{ type: Schema.Types.ObjectId , ref:'Users' }]
+    creator: { type: Schema.Types.ObjectId , ref:'Users' }
 })                              
 
 module.exports = mongoose.model('Users', UserSchema);

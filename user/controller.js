@@ -55,8 +55,8 @@ exports.logInUser= (req, res, next) => {
 
             // return the information including token as JSON
             res.json({
-                success: true,
-                message: 'Enjoy your token!',
+                name: user.firstname,
+                message:  'Enjoy your token!',
                 token: myToken
             });
             exports.myToken =myToken;
@@ -68,13 +68,16 @@ exports.logInUser= (req, res, next) => {
 
 };
 
-exports.userProfile = (req, res) => {
+exports.userProfile = (req, res,next) => {
     var UserData = req.user;
+    console.log(UserData._id);
 
-    Users.findOne({ _id : UserData._id }).populate('posts').exec(function (err, user) {
-  if (err) return handleError(err);
-
-  res.send(user);
+    Users.findOne({ posts: UserData.posts }).populate('posts').exec(function (err, user) {
+  if (!user){ 
+      res.send(err);
+    }
+else{
+  res.send(user);}
 });
 
 };
@@ -125,27 +128,47 @@ exports.ListUsers = (req, res,next) => {
 };
 
 exports.CreatePost = (req, res) => {
+
       let NewPost = new Posts({
           post: req.body.post,
           creator : req.user._id
 
       });
 
-    NewPost.save ((err, doc) => {
+    NewPost.save ((err, post) => {
+        let authUser = req.user;
         if (err) {
            next(boom.unauthorized(err.toString()));
         }
 
         else {
-            res.json(doc);
-
-        }
+            res.send(post)
+            authUser.posts.push(post);
+            authUser.save((err,posted) => {
+            console.log(posted);
+        });
+    }
+    
     })};
 
 
 exports.DeletePost = (req, res) => {
 
-}
+    var postid = req.params.postid;
+
+    console.log(postid);
+
+    Posts.findOneAndRemove({ posts:req.params.postid}, (err,doc) =>{
+            if(err || !doc){
+                res.send("Users post not removed");
+            }
+
+            else{
+
+            res.send("Users post removed");}
+            
+    } );
+};
 
 exports.FollowUser = (req, res) => {
 
