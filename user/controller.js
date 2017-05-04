@@ -158,7 +158,7 @@ exports.DeletePost = (req, res) => {
 
     console.log(postid);
 
-    Posts.findOneAndRemove({ posts:req.params.postid}, (err,doc) =>{
+  Users.posts.remove({ _id :postid}, (err,doc) =>{
             if(err || !doc){
                 res.send("Users post not removed");
             }
