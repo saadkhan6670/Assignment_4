@@ -28,7 +28,8 @@ const UserSchema = new Schema ({
         validate:phoneValidate,
         required: [true, 'Users phone number required']},
     password : String,
-    posts : [{ type: Schema.Types.ObjectId, ref: 'Posts' }]
+    posts : [{ type: Schema.Types.ObjectId, ref: 'Posts' }],
+    followers : [{ type: Schema.Types.ObjectId }]
 });
 
 const UserPost = new Schema({

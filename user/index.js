@@ -19,8 +19,8 @@ router.get('/user-profile',auth.authenticate, user.userProfile);
 router.post('/user-posts',auth.authenticate,user.CreatePost);
 router.delete('/delete-post/:postid',auth.authenticate,user.DeletePost);
 
-router.put('/followers/:userid');
-router.put('/unfollow/:userid');
+router.put('/followers/:userid',auth.authenticate,user.FollowUser);
+router.put('/unfollow/:userid',auth.authenticate,user.UnfollowUser);
 
 
 module.exports = router;

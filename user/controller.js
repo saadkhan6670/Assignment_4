@@ -70,9 +70,8 @@ exports.logInUser= (req, res, next) => {
 
 exports.userProfile = (req, res,next) => {
     var UserData = req.user;
-    console.log(UserData._id);
 
-    Users.findOne({ posts: UserData.posts }).populate('posts').exec(function (err, user) {
+    Users.findOne({ _id: UserData._id }).populate('posts followers','-followers -posts -_id -__v -password').exec(function (err, user) {
   if (!user){ 
       res.send(err);
     }
@@ -146,35 +145,68 @@ exports.CreatePost = (req, res) => {
             authUser.posts.push(post);
             authUser.save((err,posted) => {
             console.log(posted);
-        });
-    }
-    
-    })};
+     });
+    } 
+  })
+};
 
 
 exports.DeletePost = (req, res) => {
 
+
     var postid = req.params.postid;
 
-    console.log(postid);
+  Posts.findById({ _id :postid}, (err,post) =>{ 
 
-  Users.posts.remove({ _id :postid}, (err,doc) =>{
-            if(err || !doc){
-                res.send("Users post not removed");
-            }
+      post.remove((err) =>{
 
-            else{
+          Users.update({ _id : post.creator},{$pull:{posts : post._id }} , (err)=>{
+                if(err){
+                    res.send(err);
+                }
 
-            res.send("Users post removed");}
-            
-    } );
+                else{res.send("Users Post Deleted");}
+          })
+      })
+   })         
 };
 
 exports.FollowUser = (req, res) => {
 
-}
+    Users.findOne({_id: req.params.userid},(err,followuser)=>
+    {
+       let  UserLogedIn = req.user;
+       console.log(UserLogedIn._id);
+      
+       followuser.followers.push(UserLogedIn._id);
+        followuser.save((err , done ) => {
+            if(err){
+                res.send(err);
+            }
+            else
+            {
+            res.send("You Followed" + followuser.firstname);
+            }
+        });
+    });
+};
 
-exports.UnfollowUser = (req, res) => {
+exports.UnFollowUser = (req, res) => {
+
+  Users.findById({ _id :req.params.userid}, (err,followuser) =>{ 
+
+      followuser.remove((err) =>{
+
+          Users.update({ _id : followuser.followers},{$pull:{posts : post._id }} , (err)=>{
+                if(err){
+                    res.send(err);
+                }
+
+                else{res.send("Users Post Deleted");}
+          })
+      })
+   })         
+};
 
 }
 
